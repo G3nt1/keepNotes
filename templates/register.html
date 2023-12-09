@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %} Register {% endblock %}
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+        {{ form }}
+        <input type="submit" name="signup_submit" value="Sign me up"/>
+    </form>
+{% endblock %}
