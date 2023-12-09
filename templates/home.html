@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
+{% load crispy_forms_filters %}
 {% block title %} Home {% endblock %}
 {% block content %}
-    {% for user in users %}
-   <h1>{{ user.first_name }}</h1>
-        <a href="{% url 'edit_user' user.id %}">Edit</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    {% endfor %}
+    <div class="container">
+        {% for note in notes %}
+            <div class="card" style="padding: 14px; margin: 7px" >
+                <h5 class="card-header bg-secondary">{{ note.title }}</h5>
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">{{ note.content }}</p>
+                    <a href="#" class="btn btn-primary">..</a>
+                     <a href="#" class="btn btn-info">..</a>
+                     <a href="#" class="btn btn-danger">..</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}

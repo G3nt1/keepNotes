@@ -2,12 +2,23 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
-from notes.forms import CreateUserForm, LoginUserForm
+from notes.forms import CreateUserForm, LoginUserForm, CreateNotes
+from notes.models import BigNotes
 
 
 def home(request):
-    users = User.objects.all()
-    return render(request, 'home.html', {'users': users})
+    notes = BigNotes.objects.all().order_by('-created_at')
+
+    return render(request, 'home.html', {'notes': notes})
+
+
+ # if request.method == "POST":
+ #        form = CreateNotes(request.POST)
+ #        if form.is_valid():
+ #            form.save()
+ #            return redirect('home')
+ #    else:
+ #        form = CreateNotes()
 
 
 def register_user(request):
