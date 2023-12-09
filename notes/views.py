@@ -1,24 +1,26 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from notes.forms import CreateUserForm, LoginUserForm
 
 
-# def home(request):
-#     return request(render, 'home.html')
+def home(request):
+    users = User.objects.all()
+    return render(request, 'home.html', {'users': users})
+
 
 def register_user(request):
     if request.method == "POST":
         form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = form.cleaned_data['f_name' + 'l_name']
+            user.username = form.cleaned_data['email']
             user.save()
-            return redirect('Login')
+            return redirect('login')
     else:
         form = CreateUserForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'users/register.html', {'form': form})
 
 
 def login(request):
@@ -26,10 +28,30 @@ def login(request):
         form = LoginUserForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            password = form.cleaned_data['password1']
+            password = form.cleaned_data['password']
             user = authenticate(request, username=email, password=password)
             return redirect('home')
     else:
         form = LoginUserForm()
 
-    return render(request, 'login.html', {'form':form})
+    return render(request, 'users/login.html', {'form': form})
+
+
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = form.cleaned_data['email']
+            user.save()
+
+            return redirect('home')
+    else:
+        form = CreateUserForm(instance=user)
+    return render(request, 'users/edit_user.html', {'form': form})
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
