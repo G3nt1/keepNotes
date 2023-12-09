@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block title %} Create Notes {% endblock %}
+{% block content %}
+    <div class="container" style="padding: 30px">
+    <form method="post">
+    {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class="btn btn-success" name="signup_submit" value="Add Notes"/>
+        <a href="{% url 'home' %}" type="submit" class="btn btn-warning">Go Back</a>
+    </form>
+
+    </div>
+{% endblock %}

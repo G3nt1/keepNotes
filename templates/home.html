@@ -1,20 +1,77 @@
 {% extends 'base.html' %}
 {% load crispy_forms_filters %}
+
 {% block title %} Home {% endblock %}
+
 {% block content %}
-    <div class="container">
-        {% for note in notes %}
-            <div class="card" style="padding: 14px; margin: 7px" >
-                <h5 class="card-header bg-secondary">{{ note.title }}</h5>
-                <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <p class="card-text">{{ note.content }}</p>
-                    <a href="#" class="btn btn-primary">..</a>
-                     <a href="#" class="btn btn-info">..</a>
-                     <a href="#" class="btn btn-danger">..</a>
+    <div class="container-fluid">
+        <div class="row">
+
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-secondary sidebar">
+                <div class="position-sticky">
+                    <div class="btn">
+                        <button type="button"  class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                           Notes
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for note in notes %}
+                            <li> {{ note.title }}</li>
+                                 {% endfor %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Separated link</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 pt-md-10">
+                <div class="container">
+                    {% for note in notes %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-secondary">
+                                <h5 class="card-title">{{ note.title }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ note.content }}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'edit_notes' note.id %}" class="btn btn-primary">Edit</a>
+{#                                <a href="#" class="btn btn-info">Details</a>#}
+                                <a href="{% url 'delete_notes' note.id %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </main>
+        </div>
     </div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item {% if not notes.has_previous %}disabled{% endif %}">
+      {% if notes.has_previous %}
+        <a class="page-link" href="?page={{ notes.previous_page_number }}">Previous</a>
+      {% else %}
+        <span class="page-link">Previous</span>
+      {% endif %}
+    </li>
+
+    {% for num in notes.paginator.page_range %}
+      <li class="page-item {% if num == notes.number %}active{% endif %}">
+        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+      </li>
+    {% endfor %}
+
+    <li class="page-item {% if not notes.has_next %}disabled{% endif %}">
+      {% if notes.has_next %}
+        <a class="page-link" href="?page={{ notes.next_page_number }}">Next</a>
+      {% else %}
+        <span class="page-link">Next</span>
+      {% endif %}
+    </li>
+  </ul>
+</nav>
 
 {% endblock %}

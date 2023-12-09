@@ -10,8 +10,9 @@
   <div class="container-fluid">
 
     <a class="navbar-brand text-light">You have {{ notes.count }} Notes </a>
+      <a href="{% url 'create_notes'%}" type="submit" class="btn btn-outline-light">Add Notes</a>
     <form class="d-flex" role="search" style="margin: 10px; padding-right: 20px ">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <input class="form-control me-2" type="search" placeholder="Search for Notes" aria-label="Search">
       <button class="btn btn-outline-light" type="submit">Search</button>
     </form>
   </div>
