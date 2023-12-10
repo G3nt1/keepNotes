@@ -2,9 +2,11 @@
 {% load crispy_forms_filters %}
 {% block title %} Register {% endblock %}
 {% block content %}
-    <form method="post" action="register.html">
+    <div class="container" style="align-items: center">
+    <form method="post">
     {% csrf_token %}
         {{ form|crispy }}
         <input type="submit" name="signup_submit" value="Sign me up"/>
     </form>
+    </div>
 {% endblock %}
