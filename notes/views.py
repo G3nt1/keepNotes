@@ -1,9 +1,9 @@
+import markdown
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from notes.forms import CreateUserForm, LoginUserForm, CreateNotes
 from notes.models import BigNotes
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
 
@@ -12,18 +12,8 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def home(request):
     notes = BigNotes.objects.filter(user=request.user)
-    notes_per_page = 1
-    paginator = Paginator(notes, notes_per_page)
-    page = request.GET.get('page')
 
-    try:
-        current_notes = paginator.page(page)
-    except PageNotAnInteger:
-        current_notes = paginator.page(1)
-    except EmptyPage:
-        current_notes = paginator.page(paginator.num_pages)
-
-    return render(request, 'home.html', {'notes': current_notes, "note": notes})
+    return render(request, 'home.html', {'notes': notes})
 
 
 @login_required
@@ -39,6 +29,15 @@ def create_notes(request):
                 return redirect('home')
 
     return render(request, 'create_notes.html', {'form': form})
+
+
+def detail_notes(request, note_id):
+    note = get_object_or_404(BigNotes, id=note_id)
+    notes = BigNotes.objects.filter(user=request.user)
+    html = markdown.markdown(note.content)
+    return render(request, 'home.html', {'selected_note': note,
+                                         'notes': notes,
+                                         'html_text': html})
 
 
 @login_required
