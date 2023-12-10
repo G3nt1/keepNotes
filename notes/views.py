@@ -4,11 +4,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from notes.forms import CreateUserForm, LoginUserForm, CreateNotes
 from notes.models import BigNotes
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 
 # Notes
 
-
+@login_required
 def home(request):
     notes = BigNotes.objects.filter(user=request.user)
     notes_per_page = 1
@@ -25,9 +26,9 @@ def home(request):
     return render(request, 'home.html', {'notes': current_notes, "note": notes})
 
 
+@login_required
 def create_notes(request):
     form = CreateNotes()
-
     if request.user.is_authenticated:
         if request.method == "POST":
             form = CreateNotes(request.POST)
@@ -40,6 +41,7 @@ def create_notes(request):
     return render(request, 'create_notes.html', {'form': form})
 
 
+@login_required
 def edit_notes(request, notes_id):
     notes = get_object_or_404(BigNotes, id=notes_id)
     if request.method == 'POST':
@@ -52,6 +54,7 @@ def edit_notes(request, notes_id):
     return render(request, 'edit_notes.html', {'form': form})
 
 
+@login_required
 def delete_notes(request, notes_id):
     notes = get_object_or_404(BigNotes, id=notes_id)
     if request.method == 'POST':
