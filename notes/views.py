@@ -23,10 +23,10 @@ def create_notes(request):
         if request.method == "POST":
             form = CreateNotes(request.POST)
             if form.is_valid():
-                notes = form.save(commit=False)
-                notes.user = request.user
-                notes.save()
-                return redirect('home')
+                note = form.save(commit=False)
+                note.user = request.user
+                note.save()
+                return redirect('detail_note', note.id)
 
     return render(request, 'create_notes.html', {'form': form})
 
@@ -47,7 +47,7 @@ def edit_notes(request, notes_id):
         form = CreateNotes(request.POST, instance=notes)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('detail_note', notes.id)
     else:
         form = CreateNotes(instance=notes)
     return render(request, 'edit_notes.html', {'form': form})
