@@ -34,7 +34,13 @@ def create_notes(request):
 def detail_notes(request, note_id):
     note = get_object_or_404(BigNotes, id=note_id)
     notes = BigNotes.objects.filter(user=request.user)
-    html = markdown.markdown(note.content)
+    html = markdown.markdown(note.content, extensions=['markdown.extensions.fenced_code',
+                                                       'markdown.extensions.admonition',
+                                                       'markdown.extensions.tables',
+                                                       'fenced_code',
+
+                                                       ])
+
     return render(request, 'home.html', {'selected_note': note,
                                          'notes': notes,
                                          'html_text': html})
